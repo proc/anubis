@@ -7,12 +7,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
-
 	valid "github.com/asaskevich/govalidator"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -58,8 +57,8 @@ func Locate(db *sqlx.DB) http.Handler {
 		rw.Write(js)
 	})
 }
-func NewDB(dbName string, dbUser string) *sqlx.DB {
-	db, err := sqlx.Connect("postgres", "user="+dbUser+" dbname="+dbName+" sslmode=disable")
+func NewDB(dbName string, dbUser string, dbPass string) *sqlx.DB {
+	db, err := sqlx.Connect("postgres", "user="+dbUser+" password="+dbPass+" dbname="+dbName+" sslmode=disable")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -73,7 +72,8 @@ func main() {
 	}
 	dbName := os.Getenv("DB_NAME")
 	dbUser := os.Getenv("DB_USER")
-	db := NewDB(dbName, dbUser)
+	dbPass := os.Getenv("DB_PASS")
+	db := NewDB(dbName, dbUser, dbPass)
 	defer db.Close()
 
 	r := mux.NewRouter().StrictSlash(false)
