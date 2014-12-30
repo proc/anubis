@@ -57,8 +57,8 @@ func Locate(db *sqlx.DB) http.Handler {
 		rw.Write(js)
 	})
 }
-func NewDB(dbName string, dbUser string, dbPass string) *sqlx.DB {
-	db, err := sqlx.Connect("postgres", "user="+dbUser+" password="+dbPass+" dbname="+dbName+" sslmode=disable")
+func NewDB(dbName string, dbUser string, dbPass string, dbPort string) *sqlx.DB {
+	db, err := sqlx.Connect("postgres", "user="+dbUser+" password="+dbPass+" dbname="+dbName+" sslmode=disable port="+dbPort)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -73,7 +73,8 @@ func main() {
 	dbName := os.Getenv("DB_NAME")
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
-	db := NewDB(dbName, dbUser, dbPass)
+	dbPort := os.Getenv("DB_PORT")
+	db := NewDB(dbName, dbUser, dbPass, dbPort)
 	defer db.Close()
 
 	r := mux.NewRouter().StrictSlash(false)
