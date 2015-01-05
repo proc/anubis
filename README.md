@@ -25,4 +25,4 @@ Geospatial service using openstreetmap data.
     
 #### 3. Import
 
-    osm2pgsql -c --slim -d dbname planet-latest.osm.pbf
+    osm2pgsql -c --slim -d dbname -S default.style --hstore -U postgres -P 5432 planet-latest.osm.pbf
